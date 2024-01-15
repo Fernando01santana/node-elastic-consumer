@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { config } from 'dotenv';
-import { ElasticGenericError } from 'src/shared/exceptions/elastic.exception';
 config();
 
 @Injectable()
@@ -55,7 +54,7 @@ export class ElasticService {
   }
 
   public async searchBenefits(document: string): Promise<any> {
-    const index = this.configService.get('ELASTICSEARCH_INDEX')!;
+    const index = this.configService.get('ELASTICSEARCH_INDEX');
     const searchParams = {
       index,
       body: {
@@ -75,7 +74,7 @@ export class ElasticService {
       }
       return;
     } catch (error) {
-      throw new ElasticGenericError();
+      console.error(error);
     }
   }
 }

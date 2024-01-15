@@ -44,6 +44,7 @@ export class BenefitsService {
       if (!createdAndIndexes) {
         await this.elasticService.indexPost(benefits);
       }
+      console.log(benefits);
 
       return benefits;
     }
