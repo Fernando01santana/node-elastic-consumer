@@ -21,7 +21,7 @@ export class BenefitsController {
       await channel.ack(message);
       return;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
