@@ -1,5 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { BenefitsResponseDto } from 'src/shared/common/axios/dto/benefits.dto';
 import { BenefitsService } from '../services/benefits.service';
 
 @Controller('benefits')
@@ -24,7 +26,13 @@ export class BenefitsController {
   }
 
   @Get('detail')
-  async benefits(@Query('document') document: string): Promise<any> {
+  @ApiOkResponse({
+    type: BenefitsResponseDto,
+    description: 'Rota que retorna uma mensagem de saudação',
+  })
+  async benefits(
+    @Query('document') document: string,
+  ): Promise<BenefitsResponseDto> {
     return await this.benefitService.getBenefits(document);
   }
 }
