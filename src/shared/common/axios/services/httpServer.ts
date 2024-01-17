@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { BenefitsResponseDto, RequestBenefitsDto } from '../dto/benefits.dto';
 import { RequestTokenDto } from '../interfaces/benefits.interface';
 
@@ -16,13 +16,19 @@ export class HttpService {
     const response: AxiosResponse = await axios.get(endpoint, {
       headers: headers,
     });
-    const benefitData: BenefitsResponseDto = {
-      success: response.data.success,
-      data: {
-        benefits: response.data.data.beneficios,
-        document: response.data.data.cpf,
-      },
-    };
+
+    let benefitData: BenefitsResponseDto;
+    if (response.status === HttpStatusCode.Ok) {
+      benefitData.data.benefits = response.data.data.benefits;
+      benefitData.data.document = response.data.data.cpf;
+      benefitData.success = response.data.sucess;
+
+      return benefitData;
+    }
+
+    if (response && response.status >= HttpStatusCode.BadGateway) {
+      throw new Error(response.statusText);
+    }
 
     return benefitData;
   }
